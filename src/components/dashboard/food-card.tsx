@@ -1,18 +1,30 @@
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Minus, Plus } from "lucide-react"
+import { Eye } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface FoodCardProps {
+  id: number
   image: string
   title: string
   price: number
   discount?: number
   type: "Veg" | "Non Veg"
+  category?: string
 }
 
-export function FoodCard({ image, title, price, discount, type }: FoodCardProps) {
+export function FoodCard({ id, image, title, price, discount, type, category }: FoodCardProps) {
+  const router = useRouter()
+
+  const handleViewDetails = () => {
+    router.push(`/dashboard/menu/${id}`)
+  }
+
   return (
-    <Card className="overflow-hidden">
+    <Card 
+      className="overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer"
+      onClick={handleViewDetails}
+    >
       <div className="relative">
         <img src={image || "/placeholder.svg"} alt={title} className="w-full h-40 object-cover" />
         {discount && (
@@ -30,15 +42,17 @@ export function FoodCard({ image, title, price, discount, type }: FoodCardProps)
             <span className="text-xs text-gray-500">{type}</span>
           </div>
         </div>
-        <div className="flex items-center justify-between">
-          <Button variant="outline" size="icon" className="rounded-full">
-            <Minus className="h-4 w-4" />
-          </Button>
-          <span className="font-medium">1</span>
-          <Button variant="outline" size="icon" className="rounded-full">
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
+        <Button 
+          variant="outline" 
+          className="w-full"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleViewDetails();
+          }}
+        >
+          <Eye className="h-4 w-4 mr-2" />
+          View Details
+        </Button>
       </div>
     </Card>
   )

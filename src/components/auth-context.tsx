@@ -57,24 +57,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      console.log('Fetching profile for user ID:', userId)
+      const { data, error, status } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single()
 
-      if (error) {
-        if (error.code === 'PGRST116') {
-          console.warn('No profile found for user:', userId)
-          setProfile(null)
-        } else {
-          throw error
-        }
-      } else {
+      console.log('Supabase response:', { data, error, status })
+
+      if (error && status !== 406) {
+        console.error('Error fetching profile:', error)
+        throw error
+      }
+
+      if (data) {
+        console.log('Profile data found:', data)
         setProfile(data)
+      } else {
+        console.warn('No profile found for user:', userId)
+        setProfile(null)
       }
     } catch (error) {
-      console.error('Error fetching profile:', error)
+      console.error('Error in fetchProfile:', error)
     }
   }
 

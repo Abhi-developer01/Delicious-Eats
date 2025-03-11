@@ -1,58 +1,28 @@
-import { FoodCard } from "./food-card"
+'use client'
 
-const foodItems = [
-  {
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-01-12%20at%2012.32.42%20PM-QicgA83ZI0TfZlOynDOqlhOGnbwzEv.jpeg",
-    title: "Tasty Vegetable Salad Healthy Diet",
-    price: 17.99,
-    discount: 20,
-    type: "Veg",
-  },
-  {
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-01-12%20at%2012.32.42%20PM-QicgA83ZI0TfZlOynDOqlhOGnbwzEv.jpeg",
-    title: "Original Chess Meat Burger With Chips",
-    price: 23.99,
-    type: "Non Veg",
-  },
-  {
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-01-12%20at%2012.32.42%20PM-QicgA83ZI0TfZlOynDOqlhOGnbwzEv.jpeg",
-    title: "Tacos Salsa With Chickens Grilled",
-    price: 14.99,
-    type: "Non Veg",
-  },
-  {
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-01-12%20at%2012.32.42%20PM-QicgA83ZI0TfZlOynDOqlhOGnbwzEv.jpeg",
-    title: "Fresh Orange Juice With Basil Seed",
-    price: 12.99,
-    type: "Veg",
-  },
-  {
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-01-12%20at%2012.32.42%20PM-QicgA83ZI0TfZlOynDOqlhOGnbwzEv.jpeg",
-    title: "Meat Sushi Maki With Tuna, Ship And Other",
-    price: 9.99,
-    type: "Non Veg",
-  },
-  {
-    image:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-01-12%20at%2012.32.42%20PM-QicgA83ZI0TfZlOynDOqlhOGnbwzEv.jpeg",
-    title: "Original Chess Burger With French Fries",
-    price: 10.59,
-    discount: 20,
-    type: "Veg",
-  },
-]
+import { FoodCard } from "./food-card"
+import { useCategory } from "./category-context"
 
 export function FoodGrid() {
+  const { filteredItems, selectedCategory } = useCategory()
+
   return (
-    <div className="grid grid-cols-3 gap-4">
-      {foodItems.map((item, index) => (
-        <FoodCard key={index} {...item} />
-      ))}
+    <div className="w-full">
+      <h2 className="text-xl font-semibold mb-4">{selectedCategory} Items</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        {filteredItems.map((item, index) => (
+          <FoodCard 
+            key={index} 
+            id={item.id}
+            image={item.image}
+            title={item.title}
+            price={item.price}
+            discount={item.discount}
+            type={item.type as "Veg" | "Non Veg"}
+            category={item.category}
+          />
+        ))}
+      </div>
     </div>
   )
 }

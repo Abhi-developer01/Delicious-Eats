@@ -20,9 +20,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const router = useRouter()
- const pathname = usePathname()
- const hideLayoutFor = ["/dashboard"]
- const shouldHideLayout = hideLayoutFor.includes(pathname)
+  const pathname = usePathname()
+  
+  // Hide layout for dashboard and all its subpages
+  const shouldHideLayout = pathname === '/dashboard' || pathname.startsWith('/dashboard/')
+  
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -31,7 +33,6 @@ export default function RootLayout({
             {!shouldHideLayout && <Header />}
             {children}
             {!shouldHideLayout && <Footer />}
-            
           </CartProvider>
         </AuthProvider>
       </body>
@@ -39,3 +40,23 @@ export default function RootLayout({
   )
 }
 
+// {
+//   const router = useRouter()
+//  const pathname = usePathname()
+//  const hideLayoutFor = ["/dashboard"]
+//  const shouldHideLayout = hideLayoutFor.includes(pathname)
+//   return (
+//     <html lang="en">
+//       <body className={inter.className}>
+//         <AuthProvider>
+//           <CartProvider>
+//             {!shouldHideLayout && <Header />}
+//             {children}
+//             {!shouldHideLayout && <Footer />}
+            
+//           </CartProvider>
+//         </AuthProvider>
+//       </body>
+//     </html>
+//   )
+// }
