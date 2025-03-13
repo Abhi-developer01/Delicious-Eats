@@ -1,38 +1,33 @@
-'use client'
 import type { Metadata } from "next"
 import "./globals.css"
 import { Inter } from "next/font/google"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-import { CartProvider } from "@/components/cart-context"
+import { CartProvider } from "@/components/dashboard/cart-context"
 import { AuthProvider } from "@/components/auth-context"
-import { usePathname, useRouter } from "next/navigation"
+import { CategoryProvider } from "@/components/dashboard/category-context"
+import LayoutWrapper from "@/components/layout-wrapper"
+
 const inter = Inter({ subsets: ["latin"] })
 
-// export const metadata: Metadata = {
-//   title: "Food Ordering App",
-//   description: "Order your favorite food online",
-// }
+export const metadata: Metadata = {
+  title: "Food Ordering App",
+  description: "A modern food ordering application",
+}
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const router = useRouter()
-  const pathname = usePathname()
-  
-  // Hide layout for dashboard and all its subpages
-  const shouldHideLayout = pathname === '/dashboard' || pathname.startsWith('/dashboard/')
-  
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
           <CartProvider>
-            {!shouldHideLayout && <Header />}
-            {children}
-            {!shouldHideLayout && <Footer />}
+            <CategoryProvider>
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
+            </CategoryProvider>
           </CartProvider>
         </AuthProvider>
       </body>

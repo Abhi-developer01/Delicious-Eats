@@ -1,110 +1,51 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Button } from "@/components/ui/button"
-import { useCart } from "./cart-context"
-import { supabase } from '@/lib/supabase'
-import type { MenuItem, Category } from '@/types/supabase'
+import Image from 'next/image'
+
+const categories = [
+  { id: 1, name: 'Pizza', image_url: '/images/image1.png' },
+  { id: 2, name: 'Burger', image_url: '/images/image2.png' },
+  { id: 3, name: 'Momo', image_url: '/images/image3.png' },
+  { id: 4, name: 'Rolls', image_url: '/images/image4.png' },
+  { id: 5, name: 'Cake', image_url: '/images/image5.png' },
+  { id: 6, name: 'Chinese', image_url: '/images/image6.png' },
+  { id: 7, name: 'Dosa', image_url: '/images/image7.png' },
+  { id: 8, name: 'Chole Bhature', image_url: '/images/image8.png' },
+  { id: 9, name: 'Shawarma', image_url: '/images/image9.png' },
+  { id: 10, name: 'Shake', image_url: '/images/image10.png' },
+  { id: 11, name: 'Noodles', image_url: '/images/image11.png' },
+  { id: 12, name: 'Pure Veg', image_url: '/images/image12.png' },
+  { id: 13, name: 'Patty', image_url: '/images/image13.png' },
+  { id: 14, name: 'Idli', image_url: '/images/image14.png' }
+]
 
 export default function Menu() {
   const router = useRouter()
-  const [categories, setCategories] = useState<Category[]>([])
-  const [featuredItems, setFeaturedItems] = useState<Record<number, MenuItem[]>>({})
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        // Fetch categories
-        const { data: categoriesData, error: categoriesError } = await supabase
-          .from('categories')
-          .select('*')
-          .order('name')
-
-        if (categoriesError) throw categoriesError
-        setCategories(categoriesData)
-
-        // Fetch 6 items from each category
-        const featuredByCategory: Record<number, MenuItem[]> = {}
-        for (const category of categoriesData) {
-          const { data: items, error: itemsError } = await supabase
-            .from('menu_items')
-            .select('*')
-            .eq('category_id', category.id)
-            .limit(6)
-
-          if (itemsError) throw itemsError
-          featuredByCategory[category.id] = items
-        }
-        setFeaturedItems(featuredByCategory)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchData()
-  }, [])
-
-  if (loading) {
-    return <div>Loading menu...</div>
-  }
 
   return (
     <section id="menu" className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">Our Menu</h2>
+        <h2 className="text-4xl font-bold text-center mb-12">Our Menu Categories</h2>
         
-        {categories.map((category) => (
-          <div key={category.id} className="mb-16">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-semibold">{category.name}</h3>
-              <Button 
-                variant="outline"
-                onClick={() => router.push(`/menu?category=${category.id}`)}
-              >
-                View All
-              </Button>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-6">
+          {categories.map((category) => (
+            <div
+              key={category.id}
+              className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md bg-white w-full h-36 md:h-40 lg:h-48"
+              onClick={() => router.push(`/dashboard/menu?category=${category.id}`)}
+            >
+              {/* Full-Sized Category Image */}
+              <Image
+                src={category.image_url}
+                alt={category.name}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-110"
+              />
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredItems[category.id]?.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform hover:scale-105"
-                  onClick={() => router.push(`/menu/${item.id}`)}
-                >
-                  <img
-                    src={item.image_url}
-                    alt={item.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-                    <p className="text-gray-600 mb-4 line-clamp-2">
-                      {item.description}
-                    </p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xl font-bold">${item.price}</span>
-                      <Button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          router.push(`/menu/${item.id}`)
-                        }}
-                      >
-                        View Details
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   )
 }
-

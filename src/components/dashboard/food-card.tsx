@@ -4,7 +4,7 @@ import { Eye } from "lucide-react"
 import { useRouter } from "next/navigation"
 
 interface FoodCardProps {
-  id: number
+  id?: number
   image: string
   title: string
   price: number
