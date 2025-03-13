@@ -10,38 +10,61 @@ import { useToast } from "@/components/ui/use-toast"
 import { useCart } from "@/components/dashboard/cart-context"
 import { FloatingCart } from "@/components/dashboard/floating-cart"
 
-interface ProductDetailsProps {
-  params: Promise<{
-    id: string
-  }>
+interface MenuItem {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  image: string;
+  category_id: number;
+  type: 'Veg' | 'Non Veg';
+  category: string;
+  discount?: number;
 }
 
-export default function ProductDetails({ params }: ProductDetailsProps) {
+interface Category {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function ProductDetails({ params }: PageProps) {
   const router = useRouter()
   const { toast } = useToast()
   const { filteredItems } = useCategory()
   const { addToCart } = useCart()
-  const [item, setItem] = useState<any>(null)
+  const [menuItem, setMenuItem] = useState<MenuItem | null>(null)
+  const [category, setCategory] = useState<Category | null>(null)
   const [relatedItems, setRelatedItems] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
   const resolvedParams = use(params)
 
   useEffect(() => {
-    // Find the item with the matching id
-    const foundItem = filteredItems.find(item => item.id === parseInt(resolvedParams.id))
-    setItem(foundItem)
+    try {
+      // Find the item with the matching id
+      const foundItem = filteredItems.find(item => item.id === parseInt(params.id)) as MenuItem | undefined;
+      setMenuItem(foundItem || null);
 
-    // Find related items from the same category
-    if (foundItem) {
-      const related = filteredItems
-        .filter(i => i.category === foundItem.category && i.id !== foundItem.id)
-        .slice(0, 4)
-      setRelatedItems(related)
+      // Find related items from the same category
+      if (foundItem) {
+        const related = filteredItems
+          .filter(item => item.category === foundItem.category && item.id !== foundItem.id)
+          .slice(0, 4);
+        setRelatedItems(related);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false)
-  }, [resolvedParams.id, filteredItems])
+  }, [params.id, filteredItems]);
 
   const handleBack = () => {
     router.push('/dashboard/menu')
@@ -56,36 +79,40 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   }
 
   const handleAddToCart = () => {
+    if (!menuItem) return;
+    
     addToCart({
-      id: item.id,
-      title: item.title,
-      price: item.price,
+      id: menuItem.id,
+      title: menuItem.title,
+      price: menuItem.price,
       quantity: quantity,
-      image: item.image,
-      type: item.type
-    })
+      image: menuItem.image,
+      type: menuItem.type
+    });
     
     toast({
       title: "Added to Cart",
-      description: `${quantity} x ${item.title} added to your cart`,
-    })
+      description: `${quantity} x ${menuItem.title} added to your cart`,
+    });
   }
 
   const handlePlaceOrder = () => {
+    if (!menuItem) return;
+
     addToCart({
-      id: item.id,
-      title: item.title,
-      price: item.price,
+      id: menuItem.id,
+      title: menuItem.title,
+      price: menuItem.price,
       quantity: quantity,
-      image: item.image,
-      type: item.type
-    })
+      image: menuItem.image,
+      type: menuItem.type
+    });
     
-    router.push('/dashboard/checkout')
+    router.push('/dashboard/checkout');
   }
 
   if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>
-  if (!item) return <div className="flex justify-center items-center h-screen">Item not found</div>
+  if (!menuItem) return <div className="flex justify-center items-center h-screen">Item not found</div>
 
   // Sample ingredients list
   const ingredients = [
@@ -145,13 +172,13 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
           {/* Product Image */}
           <div className="relative h-[400px]">
             <img
-              src={item.image}
-              alt={item.title}
+              src={menuItem.image}
+              alt={menuItem.title}
               className="absolute inset-0 w-full h-full object-cover"
             />
-            {item.discount && (
+            {menuItem.discount && (
               <div className="absolute top-4 left-4 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-md text-sm font-medium">
-                {item.discount}% Off
+                {menuItem.discount}% Off
               </div>
             )}
           </div>
@@ -160,19 +187,19 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
           <div className="p-8 h-[400px] flex flex-col">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h1 className="text-xl font-bold mb-2">{item.title}</h1>
+                <h1 className="text-xl font-bold mb-2">{menuItem.title}</h1>
                 <div className="flex items-center gap-2">
-                  <span className={`w-3 h-3 rounded-full ${item.type === "Veg" ? "bg-green-500" : "bg-red-500"}`}></span>
-                  <span className="text-sm text-gray-500">{item.type}</span>
+                  <span className={`w-3 h-3 rounded-full ${menuItem.type === "Veg" ? "bg-green-500" : "bg-red-500"}`}></span>
+                  <span className="text-sm text-gray-500">{menuItem.type}</span>
                 </div>
               </div>
               <div className="text-right">
                 <span className="text-sm text-gray-500">Category</span>
-                <p className="text-sm font-medium">{item.category}</p>
+                <p className="text-sm font-medium">{menuItem.category}</p>
               </div>
             </div>
 
-            <div className="text-3xl font-bold text-orange-600 mb-6">${item.price.toFixed(2)}</div>
+            <div className="text-3xl font-bold text-orange-600 mb-6">${menuItem.price.toFixed(2)}</div>
 
             {/* Ingredients */}
             <div className="flex-grow">

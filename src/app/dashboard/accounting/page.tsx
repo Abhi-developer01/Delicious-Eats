@@ -14,7 +14,7 @@ export default function AccountingPage() {
               <DollarSign className="h-6 w-6 text-green-600" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Today's Revenue</p>
+              <p className="text-sm text-gray-500">Today&apos;s Revenue</p>
               <p className="text-2xl font-bold">$1,245</p>
             </div>
           </div>
