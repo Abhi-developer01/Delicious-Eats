@@ -1,25 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { CreditCard, QrCode, Banknote, Edit2 } from "lucide-react"
-import Image from 'next/image'
 
-interface CartItem {
-  title: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
-
-const cartItems: CartItem[] = [
-  {
-    title: "Chicken Burger",
-    price: 12.99,
-    quantity: 2,
-    image: "https://example.com/burger.jpg"
-  },
-  { title: "Original Chess Meat Burger With Chips (Non Veg)", price: 23.99, quantity: 1, image: "" },
-  { title: "Fresh Orange Juice With Basil Seed No Sugar (Veg)", price: 12.99, quantity: 1, image: "" },
-  { title: "Meat Sushi Maki With Tuna, Ship And Other (Non Veg)", price: 9.99, quantity: 1, image: "" },
-  { title: "Tacos Salsa With Chickens Grilled", price: 14.99, quantity: 1, image: "" },
+const cartItems = [
+  { title: "Original Chess Meat Burger With Chips (Non Veg)", price: 23.99, quantity: 1 },
+  { title: "Fresh Orange Juice With Basil Seed No Sugar (Veg)", price: 12.99, quantity: 1 },
+  { title: "Meat Sushi Maki With Tuna, Ship And Other (Non Veg)", price: 9.99, quantity: 1 },
+  { title: "Tacos Salsa With Chickens Grilled", price: 14.99, quantity: 1 },
 ]
 
 export function Cart() {
@@ -54,12 +40,10 @@ export function Cart() {
       <div className="flex-1 overflow-auto p-4">
         {cartItems.map((item, index) => (
           <div key={index} className="flex items-center gap-3 mb-4">
-            <Image
-              src={item.image}
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202025-01-12%20at%2012.32.42%20PM-QicgA83ZI0TfZlOynDOqlhOGnbwzEv.jpeg"
               alt={item.title}
-              width={64}
-              height={64}
-              className="w-16 h-16 object-cover rounded-md"
+              className="w-16 h-16 rounded-lg object-cover"
             />
             <div className="flex-1">
               <h4 className="text-sm font-medium">{item.title}</h4>
