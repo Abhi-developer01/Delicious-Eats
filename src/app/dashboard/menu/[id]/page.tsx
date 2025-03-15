@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState, use } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useCategory } from "@/components/dashboard/category-context"
 import { ArrowLeft, Plus, Minus, ShoppingCart } from 'lucide-react'
@@ -10,13 +10,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { useCart } from "@/components/dashboard/cart-context"
 import { FloatingCart } from "@/components/dashboard/floating-cart"
 
-interface ProductDetailsProps {
-  params: Promise<{
-    id: string
-  }>
-}
-
-export default function ProductDetails({ params }: ProductDetailsProps) {
+export default function ProductDetails() {
   const router = useRouter()
   const { toast } = useToast()
   const { filteredItems } = useCategory()
@@ -25,11 +19,17 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const [relatedItems, setRelatedItems] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
-  const resolvedParams = use(params)
 
+  const params = useParams() // ✅ Use this instead of passing params as a prop
+  console.log(params) // Debugging: Check what params return
+
+  // Ensure id is always a string, even if it's an array
+  const productId = params.id ? parseInt(Array.isArray(params.id) ? params.id[0] : params.id) : null
   useEffect(() => {
+    if (!productId) return
+
     // Find the item with the matching id
-    const foundItem = filteredItems.find(item => item.id === parseInt(resolvedParams.id))
+    const foundItem = filteredItems.find(item => item.id === productId)
     setItem(foundItem)
 
     // Find related items from the same category
@@ -41,7 +41,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
     }
     
     setLoading(false)
-  }, [resolvedParams.id, filteredItems])
+  }, [productId, filteredItems])
 
   const handleBack = () => {
     router.push('/dashboard/menu')
@@ -56,6 +56,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   }
 
   const handleAddToCart = () => {
+    if (!item) return
+
     addToCart({
       id: item.id,
       title: item.title,
@@ -72,6 +74,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   }
 
   const handlePlaceOrder = () => {
+    if (!item) return
+
     addToCart({
       id: item.id,
       title: item.title,
@@ -212,13 +216,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                 />
                 <div className="p-4">
                   <h3 className="font-semibold mb-2">{relatedItem.title}</h3>
-                  <div className="flex items-center justify-between">
-                    <div className="font-bold text-orange-600">${relatedItem.price.toFixed(2)}</div>
-                    <div className="flex items-center gap-1">
-                      <span className={`w-2 h-2 rounded-full ${relatedItem.type === "Veg" ? "bg-green-500" : "bg-red-500"}`}></span>
-                      <span className="text-xs text-gray-500">{relatedItem.type}</span>
-                    </div>
-                  </div>
+                  <div className="font-bold text-orange-600">${relatedItem.price.toFixed(2)}</div>
                 </div>
               </Card>
             ))}
@@ -228,4 +226,4 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       <FloatingCart />
     </div>
   )
-} 
+}
