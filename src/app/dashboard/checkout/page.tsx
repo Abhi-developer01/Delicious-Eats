@@ -168,16 +168,15 @@ export default function CheckoutPage() {
     // Try to save to Supabase, but don't wait for it
     try {
       // Attempt to save to Supabase in the background
-      supabase
-        .from('orders1')
+      const { error } = await supabase
+        .from('orders1')  // Make sure this matches your actual table name in Supabase
         .insert([orderData])
-        .then(({ data, error }) => {
-          if (error) {
-            console.error('Supabase Error:', error)
-          } else {
-            console.log('Order successfully created:', data)
-          }
-        })
+      
+      if (error) {
+        console.error('Supabase Error:', error)
+      } else {
+        console.log('Order successfully created')
+      }
     } catch (error) {
       console.error('Error creating order:', error)
     }
