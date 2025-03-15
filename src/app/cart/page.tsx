@@ -4,22 +4,27 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/components/cart-context"
 import { Plus, Minus, Trash2 } from 'lucide-react'
+import type { MenuItem } from "@/types/supabase"
+
+interface CartItem extends MenuItem {
+  quantity: number;
+}
 
 export default function CartPage() {
   const router = useRouter()
-  const { items, addToCart, removeFromCart, clearCart } = useCart()
+  const { cartItems, addToCart, removeFromCart, clearCart } = useCart()
 
-  const groupedItems = items.reduce((acc, item) => {
+  const groupedItems = cartItems.reduce<Record<number, CartItem>>((acc, item) => {
     if (!acc[item.id]) {
       acc[item.id] = { ...item, quantity: 0 }
     }
     acc[item.id].quantity++
     return acc
-  }, {} as Record<string, any>)
+  }, {})
 
-  const total = items.reduce((sum, item) => sum + item.price, 0)
+  const total = cartItems.reduce((sum: number, item: MenuItem) => sum + item.price, 0)
 
-  if (items.length === 0) {
+  if (cartItems.length === 0) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
         <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
@@ -34,7 +39,7 @@ export default function CartPage() {
       
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-4">
-          {Object.values(groupedItems).map((item: any) => (
+          {Object.values(groupedItems).map((item: CartItem) => (
             <div key={item.id} className="flex gap-4 bg-white p-4 rounded-lg shadow">
               <img
                 src={item.image_url}
