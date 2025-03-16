@@ -10,7 +10,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Redirect to the menu page by default
-    router.push('/dashboard/menu')
+    router.push('/dashboard/product')
     
     // Uncomment when authentication is implemented
     // if (!user) {

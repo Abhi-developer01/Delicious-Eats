@@ -4,7 +4,7 @@ import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
 
 const navItems = [
-  { icon: Menu, label: "Menu", path: "/dashboard/menu", color: "text-gray-600" },
+  { icon: Menu, label: "Menu", path: "/dashboard/product", color: "text-gray-600" },
   { icon: TableBar, label: "Table Services", path: "/dashboard/table-services", color: "text-gray-600" },
   { icon: CalendarRange, label: "Reservation", path: "/dashboard/reservation", color: "text-gray-600" },
   { icon: Truck, label: "Delivery", path: "/dashboard/delivery", color: "text-gray-600" },

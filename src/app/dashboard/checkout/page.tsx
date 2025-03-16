@@ -142,7 +142,7 @@ export default function CheckoutPage() {
   // Redirect if cart is empty
   useEffect(() => {
     if (items.length === 0 && !showSuccess) {
-      router.push('/dashboard/menu')
+      router.push('/dashboard/product')
     }
   }, [items, router, showSuccess])
 
@@ -309,7 +309,7 @@ export default function CheckoutPage() {
             
             <Button 
               className="w-full animate-fadeInUp animation-delay-300"
-              onClick={() => router.push('/dashboard/menu')}
+              onClick={() => router.push('/dashboard/product')}
             >
               Continue Shopping
             </Button>

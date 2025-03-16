@@ -33,7 +33,7 @@ export default function Menu() {
             <div
               key={category.id}
               className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md bg-white w-full h-36 md:h-40 lg:h-48"
-              onClick={() => router.push(`/dashboard/menu?category=${category.id}`)}
+              onClick={() => router.push(`/dashboard/product?category=${category.id}`)}
             >
               {/* Full-Sized Category Image */}
               <Image

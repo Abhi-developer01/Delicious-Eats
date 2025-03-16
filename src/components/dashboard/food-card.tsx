@@ -17,7 +17,7 @@ export function FoodCard({ id, image, title, price, discount, type, category }: 
   const router = useRouter()
 
   const handleViewDetails = () => {
-    router.push(`/dashboard/menu/${id}`)
+    router.push(`/dashboard/product/${id}`)
   }
 
   return (
