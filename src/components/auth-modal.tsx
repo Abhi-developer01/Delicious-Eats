@@ -11,8 +11,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { supabase } from '@/lib/supabase'
 
-type AuthMode = 'signin' | 'signup'
+type AuthMode = 'signin' | 'signup' | 'forgot-password'
 
 export function AuthModal({
   isOpen,
@@ -27,22 +28,33 @@ export function AuthModal({
   const [fullName, setFullName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
   const { signIn, signUp } = useAuth()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
+    setSuccessMessage('')
     setLoading(true)
 
     try {
       if (mode === 'signin') {
         await signIn(email, password)
-      } else {
+      } else if (mode === 'signup') {
         if (!fullName) {
           setError('Full name is required')
           return
         }
         await signUp(email, password, fullName)
+      } else if (mode === 'forgot-password') {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/reset-password`,
+        })
+        if (error) throw error
+        setSuccessMessage('Password reset link sent to your email!')
+        setMode('signin')
+        setEmail('')
+        return
       }
       onClose()
     } catch (err) {
@@ -57,7 +69,7 @@ export function AuthModal({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {mode === 'signin' ? 'Sign In' : 'Create Account'}
+            {mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Create Account' : 'Reset Password'}
           </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -82,21 +94,24 @@ export function AuthModal({
               required
             />
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+          {mode !== 'forgot-password' && (
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+          )}
           {error && <p className="text-sm font-medium text-destructive">{error}</p>}
+          {successMessage && <p className="text-sm font-medium text-green-600">{successMessage}</p>}
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? 'Loading...' : mode === 'signin' ? 'Sign In' : 'Sign Up'}
+            {loading ? 'Loading...' : mode === 'signin' ? 'Sign In' : mode === 'signup' ? 'Sign Up' : 'Send Reset Link'}
           </Button>
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm text-gray-600">
             {mode === 'signin' ? (
               <>
                 Don't have an account?{' '}
@@ -107,10 +122,31 @@ export function AuthModal({
                 >
                   Sign Up
                 </button>
+
+                <br /> 
+                {' '}
+                <button
+                  type="button"
+                  onClick={() => setMode('forgot-password')}
+                  className="text-primary text-left text-slate-400 mt-8 underline-offset-4 hover:underline hover:text-slate-800"
+                >
+                  Forgot Password?
+                </button>
+              </>
+            ) : mode === 'signup' ? (
+              <>
+                Already have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => setMode('signin')}
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  Sign In
+                </button>
               </>
             ) : (
               <>
-                Already have an account?{' '}
+                Remember your password?{' '}
                 <button
                   type="button"
                   onClick={() => setMode('signin')}

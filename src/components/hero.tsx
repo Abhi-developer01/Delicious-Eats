@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from './auth-context'
 import { AuthModal } from './auth-modal'
-import { Button } from '@/components/ui/button'
+// import { Button } from '@/components/ui/button'
+import { Button } from './ui/moving-border'
 import { ArrowRight, Store } from 'lucide-react'
 import Image from 'next/image'
 
@@ -75,16 +76,20 @@ export default function Hero() {
             </Button> */}
             <Button 
               onClick={handleDashboardClick} 
-              size="lg" 
-              variant="outline"
-              // className="text-white border-white hover:bg-white"
-              className="bg-white text-black hover:bg-white/90"
+              // size="lg" 
+              // variant="outline"
+              // // className="text-white border-white hover:bg-white"
+              // className="bg-white text-black hover:bg-white/90"
+
+              borderRadius="1.75rem"
+              className="bg-black text-white dark:text-white border-white-100 border-slate-900"
             >
               <Store className="mr-2 h-5 w-5" />
               Restaurant Dashboard
             </Button>
+            
           </div>
-          <p className="mt-4 text-sm text-gray-100 animate-fade-in-delay-3">
+          <p className="relative top-10 text-sm text-gray-100 animate-fade-in-delay-3">
             Are you a restaurant owner? Get access to our powerful dashboard
           </p>
         </div>

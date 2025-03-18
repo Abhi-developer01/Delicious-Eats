@@ -26,22 +26,22 @@ export default function Header() {
         <nav>
           <ul className="flex space-x-4">
             <li>
-              <Link href="/menu" className="text-muted-foreground hover:text-primary">
+              <Link href="#menu" className="text-gray-900 hover:text-primary">
                 Menu
               </Link>
             </li>
             <li>
-              <Link href="#how-it-works" className="text-muted-foreground hover:text-primary">
+              <Link href="#how-it-works" className="text-gray-900 hover:text-primary">
                 How It Works
               </Link>
             </li>
             <li>
-              <Link href="#testimonials" className="text-muted-foreground hover:text-primary">
+              <Link href="#testimonials" className="text-gray-900 hover:text-primary">
                 Testimonials
               </Link>
             </li>
             <li>
-              <Link href="#faq" className="text-muted-foreground hover:text-primary">
+              <Link href="#faq" className="text-gray-900 hover:text-primary">
                 FAQ
               </Link>
             </li>

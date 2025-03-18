@@ -282,6 +282,7 @@ const allFoodItems = [
     category: "Burges"
   },
   {
+    id: 34,
     image: "https://images.pexels.com/photos/3219547/pexels-photo-3219547.jpeg?auto=compress&cs=tinysrgb&w=600",
     title: "Mushroom Swiss Burger",
     price: 15.99,
@@ -289,6 +290,7 @@ const allFoodItems = [
     category: "Burges"
   },
   {
+    id: 35,
     image: "https://images.pexels.com/photos/3504876/pexels-photo-3504876.jpeg?auto=compress&cs=tinysrgb&w=600",
     title: "Spicy Chicken Burger",
     price: 14.99,
@@ -296,6 +298,7 @@ const allFoodItems = [
     category: "Burges"
   },
   {
+    id: 36,
     image: "https://images.pexels.com/photos/2271107/pexels-photo-2271107.jpeg?auto=compress&cs=tinysrgb&w=600",
     title: "Double Beef Burger with Fries",
     price: 18.99,
