@@ -58,14 +58,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
-      console.log('Fetching profile for user ID:', userId)
+      // console.log('Fetching profile for user ID:', userId)
       const { data, error, status } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single()
 
-      console.log('Supabase response:', { data, error, status })
+      // console.log('Supabase response:', { data, error, status })
 
       if (error && status !== 406) {
         console.error('Error fetching profile:', error)
@@ -73,17 +73,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (data) {
-        console.log('Profile data found:', data)
+        // console.log('Profile data found:', data)
         setProfile(data)
         
         // Request notification permission and update FCM token
         try {
-          console.log('Requesting notification permission...')
+          // console.log('Requesting notification permission...')
           const fcmToken = await requestNotificationPermission()
-          console.log('FCM token received:', fcmToken)
+          // console.log('FCM token received:', fcmToken)
           
           if (fcmToken && fcmToken !== data.fcm_token) {
-            console.log('Updating FCM token in profile...')
+            // console.log('Updating FCM token in profile...')
             await updateFCMToken(userId, fcmToken)
             // Update local profile state with new token
             setProfile({ ...data, fcm_token: fcmToken })
@@ -96,26 +96,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(null)
       }
     } catch (error) {
-      console.error('Error in fetchProfile:', error)
+      // console.error('Error in fetchProfile:', error)
     }
   }
 
   const updateFCMToken = async (userId: string, token: string) => {
     try {
-      console.log('Updating FCM token for user:', userId)
+      // console.log('Updating FCM token for user:', userId)
       const { error } = await supabase
         .from('profiles')
         .update({ fcm_token: token })
         .eq('id', userId)
 
       if (error) {
-        console.error('Error updating FCM token:', error)
+        // console.error('Error updating FCM token:', error)
         throw error
       }
 
-      console.log('FCM token updated successfully')
+      // console.log('FCM token updated successfully')
     } catch (error) {
-      console.error('Error in updateFCMToken:', error)
+      // console.error('Error in updateFCMToken:', error)
       throw error
     }
   }
@@ -128,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
       if (error) throw error
       if (data.user) {
-        console.log('User signed in successfully:', data.user.id)
+        // console.log('User signed in successfully:', data.user.id)
         await fetchProfile(data.user.id)
       }
     } catch (error) {
@@ -150,7 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       })
       if (error) throw error
       if (data.user) {
-        console.log('User signed up successfully:', data.user.id)
+        // console.log('User signed up successfully:', data.user.id)
         await fetchProfile(data.user.id)
       }
     } catch (error) {
