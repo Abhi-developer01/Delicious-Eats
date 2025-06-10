@@ -9,8 +9,30 @@ import LayoutWrapper from "@/components/layout-wrapper"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Food Ordering App",
-  description: "A modern food ordering application",
+  title: "Delicious Eats - Food Ordering App",
+  description: "Order from your favorite restaurants with just a few clicks. Delicious food delivered to your door.",
+  openGraph: {
+    title: "Delicious Eats - Food Ordering App",
+    description: "Order from your favorite restaurants with just a few clicks. Delicious food delivered to your door.",
+    url: "https://delicious-eats-lime.vercel.app/",
+    siteName: "Delicious Eats",
+    images: [
+      {
+        url: "https://delicious-eats-lime.vercel.app/og-image.png", // Must be an absolute URL
+        width: 1200,
+        height: 630,
+        alt: "Delicious Eats - Food Ordering App",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Delicious Eats - Food Ordering App",
+    description: "Order from your favorite restaurants with just a few clicks. Delicious food delivered to your door.",
+    images: ["https://delicious-eats-lime.vercel.app/og-image.png"], // Must be an absolute URL
+  },
 }
 
 export default function RootLayout({
