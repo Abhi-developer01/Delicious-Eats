@@ -69,20 +69,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(data)
         
         // Request notification permission and update FCM token
-        try {
-          // console.log('Requesting notification permission...')
-          const fcmToken = await requestNotificationPermission()
-          // console.log('FCM token received:', fcmToken)
-          
-          if (fcmToken && fcmToken !== data.fcm_token) {
-            // console.log('Updating FCM token in profile...')
-            await updateFCMToken(userId, fcmToken)
-            // Update local profile state with new token
-            setProfile({ ...data, fcm_token: fcmToken })
-          }
-        } catch (error) {
-          console.error('Error handling notifications:', error)
-        }
+        // try {
+        //   // console.log('Requesting notification permission...')
+        //   const fcmToken = await requestNotificationPermission()
+        //   // console.log('FCM token received:', fcmToken)
+        //   
+        //   if (fcmToken && fcmToken !== data.fcm_token) {
+        //     // console.log('Updating FCM token in profile...')
+        //     await updateFCMToken(userId, fcmToken)
+        //     // Update local profile state with new token
+        //     setProfile({ ...data, fcm_token: fcmToken })
+        //   }
+        // } catch (error) {
+        //   console.error('Error handling notifications:', error)
+        // }
       } else {
         console.warn('No profile found for user:', userId)
         setProfile(null)
