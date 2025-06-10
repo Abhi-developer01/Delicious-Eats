@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     siteName: "Delicious Eats",
     images: [
       {
-        url: "https://delicious-eats-lime.vercel.app/og-image.png", // Must be an absolute URL
+        url: "https://delicious-eats-lime.vercel.app/og-image.svg", // Must be an absolute URL
         width: 1200,
         height: 630,
         alt: "Delicious Eats - Food Ordering App",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Delicious Eats - Food Ordering App",
     description: "Order from your favorite restaurants with just a few clicks. Delicious food delivered to your door.",
-    images: ["https://delicious-eats-lime.vercel.app/og-image.png"], // Must be an absolute URL
+    images: ["https://delicious-eats-lime.vercel.app/og-image.svg"], // Must be an absolute URL
   },
 }
 
