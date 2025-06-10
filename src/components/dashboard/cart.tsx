@@ -48,7 +48,7 @@ export function Cart() {
             <div className="flex-1">
               <h4 className="text-sm font-medium">{item.title}</h4>
               <div className="flex justify-between items-center mt-1">
-                <span className="text-green-600 font-bold">${item.price.toFixed(2)}</span>
+                <span className="text-green-600 font-bold">Rs {item.price.toFixed(2)}</span>
                 <span className="text-sm text-gray-500">{item.quantity}X</span>
               </div>
             </div>

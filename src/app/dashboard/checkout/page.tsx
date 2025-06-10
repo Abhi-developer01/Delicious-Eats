@@ -150,44 +150,115 @@ export default function CheckoutPage() {
     e.preventDefault()
     setLoading(true)
 
-    // Create order data for Supabase
+    // Create order data for Supabase with proper types
     const orderData = {
-      user_id: user?.id || 'guest',
-      customer_details: address,
+      user_id: user?.id, // This will be a UUID
+      customer_details: {
+        fullName: address.fullName,
+        street: address.street,
+        city: address.city,
+        state: address.state,
+        zipCode: address.zipCode,
+        phone: address.phone
+      },
       payment_method: paymentMethod,
-      payment_details: paymentMethod === 'card' ? cardDetails : 
-                      paymentMethod === 'upi' ? upiDetails : null,
-      items: items,
-      subtotal: totalAmount,
+      payment_details: paymentMethod === 'card' ? {
+        cardNumber: cardDetails.cardNumber,
+        cardHolder: cardDetails.cardHolder,
+        expiryDate: cardDetails.expiryDate,
+        cvv: cardDetails.cvv
+      } : paymentMethod === 'upi' ? {
+        upiId: upiDetails.upiId
+      } : null,
+      items: items.map(item => ({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image
+      })),
+      subtotal: Number(totalAmount),
       delivery_fee: 5,
-      total_amount: totalAmount + 5,
+      total_amount: Number(totalAmount + 5),
       status: 'pending',
       created_at: new Date().toISOString()
     }
 
-    // Try to save to Supabase, but don't wait for it
     try {
-      // Attempt to save to Supabase in the background
-      supabase
+      // Save order to Supabase
+      const { data: orderResult, error } = await supabase
         .from('orders1')
         .insert([orderData])
-        .then(({ data, error }) => {
-          if (error) {
-            console.error('Supabase Error:', error)
-          } else {
-            console.log('Order successfully created:', data)
-          }
-        })
+        .select()
+
+      if (error) {
+        console.error('Supabase Error:', error)
+        // Show error to user
+        alert('Failed to place order. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      if (!orderResult || orderResult.length === 0) {
+        console.error('No order result returned')
+        alert('Failed to place order. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      console.log('Order successfully created:', orderResult)
+      
+      // After successfully creating the order, send email notification
+      try {
+        const orderNumber = orderResult[0].id;
+        
+        // Send email notification
+        const emailResponse = await fetch('/api/email-notifications', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: 'Your Order Has Been Placed!',
+            message: `
+              <p>Thank you for your order from our Food Ordering App!</p>
+              <p>Your order #${orderNumber} has been received and is being processed.</p>
+              <p><strong>Order Summary:</strong></p>
+              <ul>
+                ${items.map(item => `<li>${item.quantity}x ${item.title} - $${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
+              </ul>
+              <p><strong>Total:</strong> $${(totalAmount + 5).toFixed(2)}</p>
+              <p><strong>Delivery Address:</strong><br/>
+              ${address.fullName}<br/>
+              ${address.street}<br/>
+              ${address.city}, ${address.state} ${address.zipCode}<br/>
+              ${address.phone}</p>
+              <p>Thank you for choosing our service!</p>
+            `,
+            link: '/dashboard/orders',
+            testMode: false,
+            testEmail: user?.email
+          })
+        });
+        
+        const emailResult = await emailResponse.json();
+        console.log('Email notification result:', emailResult);
+      } catch (emailError) {
+        console.error('Error sending order confirmation email:', emailError);
+        // Continue with success flow even if email fails
+      }
+
+      // Show success after a delay
+      setTimeout(() => {
+        setLoading(false)
+        setShowSuccess(true)
+        clearCart()
+      }, 1500)
     } catch (error) {
       console.error('Error creating order:', error)
-    }
-
-    // Always show success after a delay, regardless of Supabase result
-    setTimeout(() => {
+      alert('Failed to place order. Please try again.')
       setLoading(false)
-      setShowSuccess(true)
-      clearCart()
-    }, 1500) // Simulate a 1.5 second processing time
+    }
   }
 
   const renderPaymentDetails = () => {
@@ -449,22 +520,22 @@ export default function CheckoutPage() {
                     <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
                   </div>
                 </div>
-                <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="font-medium">Rs {(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
           </div>
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>${totalAmount.toFixed(2)}</span>
+              <span>Rs {totalAmount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span>Delivery Fee</span>
-              <span>$5.00</span>
+              <span>Rs 5.00</span>
             </div>
             <div className="flex justify-between font-bold text-lg">
               <span>Total</span>
-              <span>${(totalAmount + 5).toFixed(2)}</span>
+              <span>Rs {(totalAmount + 5).toFixed(2)}</span>
             </div>
           </div>
         </div>

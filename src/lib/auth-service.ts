@@ -46,6 +46,18 @@ export async function getProfile() {
   return data as Profile
 }
 
+export async function signInWithGoogle() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: window.location.origin,
+    },
+  })
+
+  if (error) throw error
+  return data
+}
+
 export async function updateProfile(profile: Partial<Profile>) {
   const { data: { user } } = await supabase.auth.getUser()
   

@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { User, Store, Bell, Shield, CreditCard, Clock } from 'lucide-react'
+import Link from 'next/link'
 
 export default function SettingsPage() {
   return (
@@ -98,17 +99,23 @@ export default function SettingsPage() {
             {[
               { title: 'Email Notifications', desc: 'Receive order and reservation updates via email' },
               { title: 'SMS Notifications', desc: 'Receive text messages for new orders' },
-              { title: 'Push Notifications', desc: 'Receive push notifications on your devices' }
+              { title: 'Push Notifications', desc: 'Receive push notifications on your devices', link: '/dashboard/settings/notifications' }
             ].map((item, index) => (
               <div key={index} className="flex justify-between items-center pb-3 border-b last:border-0">
                 <div>
                   <p className="font-medium">{item.title}</p>
                   <p className="text-sm text-gray-500">{item.desc}</p>
                 </div>
-                <div className="relative inline-block w-10 mr-2 align-middle select-none">
-                  <input type="checkbox" className="sr-only peer" defaultChecked={index < 2} />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
-                </div>
+                {item.link ? (
+                  <Link href={item.link}>
+                    <Button variant="outline" size="sm">Manage</Button>
+                  </Link>
+                ) : (
+                  <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                    <input type="checkbox" className="sr-only peer" defaultChecked={index < 2} />
+                    <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                  </div>
+                )}
               </div>
             ))}
           </div>

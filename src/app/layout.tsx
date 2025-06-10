@@ -20,6 +20,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Add the font link here */}
+        {/* <link
+          href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap"
+          rel="stylesheet"
+        /> */}
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+  rel="stylesheet"
+/>
+
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <CartProvider>

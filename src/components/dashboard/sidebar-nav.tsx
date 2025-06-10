@@ -1,4 +1,4 @@
-import { Menu, TableIcon as TableBar, CalendarRange, Truck, Calculator, Settings, LogOut } from "lucide-react"
+import { Menu, TableIcon as TableBar, CalendarRange, Truck, Calculator, Settings, LogOut, BellRing } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter, usePathname } from "next/navigation"
 import Link from "next/link"
@@ -9,6 +9,7 @@ const navItems = [
   { icon: CalendarRange, label: "Reservation", path: "/dashboard/reservation", color: "text-gray-600" },
   { icon: Truck, label: "Delivery", path: "/dashboard/delivery", color: "text-gray-600" },
   { icon: Calculator, label: "Accounting", path: "/dashboard/accounting", color: "text-gray-600" },
+  { icon: BellRing, label: "Notifications", path: "/dashboard/notifications", color: "text-gray-600" },
   { icon: Settings, label: "Settings", path: "/dashboard/settings", color: "text-gray-600" },
 ]
 
@@ -28,9 +29,16 @@ export function SidebarNav() {
           alt="Chili POS Logo"
           className="w-8 h-8"
         /> */}
-        <Link href="/" className="text-2xl font-bold text-primary">
-          Delicious Eats
-        </Link>
+        <Link href="/" className="inline-flex items-center space-x-3">
+  <img
+    src="/images/delicious eat.png"
+    alt="Delicious Eats logo"
+    className="h-8 w-auto transform scale-150 object-contain"
+  />
+  <span className="text-2xl text-primary" style={{ fontFamily: "'Pacifico', cursive" }}>
+    Delicious Eats
+  </span>
+</Link>
         {/* <span className="font-semibold">CHILI POS</span> */}
       </div>
       <nav className="space-y-2">
@@ -40,11 +48,10 @@ export function SidebarNav() {
             <Button
               key={index}
               variant={isActive ? "default" : "ghost"}
-              className={`w-full flex items-center pl-1 justify-start transition-all duration-200 ${
-                isActive 
-                  ? "bg-green-700 text-white font-medium shadow-md hover:bg-green-700" 
+              className={`w-full flex items-center pl-1 justify-start transition-all duration-200 ${isActive
+                  ? "bg-green-700 text-white font-medium shadow-md hover:bg-green-700"
                   : `hover:bg-gray-100 ${item.color}`
-              }`}
+                }`}
               onClick={() => handleNavigation(item.path)}
             >
               {isActive && (
@@ -59,8 +66,8 @@ export function SidebarNav() {
         })}
       </nav>
 
-      <Button 
-        variant="ghost" 
+      <Button
+        variant="ghost"
         className="w-full justify-start mt-auto text-gray-600 absolute bottom-4 hover:bg-red-50 hover:text-red-600"
         onClick={() => router.push("/")}
       >

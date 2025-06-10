@@ -8,6 +8,7 @@ import {
   ArrowRight
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const features = [
   { 
@@ -90,6 +91,7 @@ export default function HowItWorks() {
           <p className="text-gray-600 mb-6">
             Ready to streamline your restaurant operations?
           </p>
+          <Link href="/dashboard">
           <Button 
             size="lg"
             className="bg-primary hover:bg-primary/90 text-white px-8"
@@ -97,6 +99,7 @@ export default function HowItWorks() {
             Get Started Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
+          </Link>
         </div>
       </div>
     </section>

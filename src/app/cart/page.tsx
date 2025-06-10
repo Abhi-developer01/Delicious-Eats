@@ -48,7 +48,7 @@ export default function CartPage() {
               />
               <div className="flex-1">
                 <h3 className="font-semibold">{item.name}</h3>
-                <p className="text-sm text-muted-foreground">${item.price}</p>
+                <p className="text-sm text-muted-foreground">Rs{item.price}</p>
                 <div className="flex items-center gap-2 mt-2">
                   <Button
                     variant="outline"
@@ -87,15 +87,15 @@ export default function CartPage() {
           <h2 className="font-semibold text-lg">Order Summary</h2>
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>${total.toFixed(2)}</span>
+            <span>Rs{total.toFixed(2)}</span>
           </div>
           <div className="flex justify-between">
             <span>Delivery Fee</span>
-            <span>$5.00</span>
+            <span>Rs5.00</span>
           </div>
           <div className="border-t pt-4 flex justify-between font-bold">
             <span>Total</span>
-            <span>${(total + 5).toFixed(2)}</span>
+            <span>Rs{(total + 5).toFixed(2)}</span>
           </div>
           <Button 
             className="w-full"

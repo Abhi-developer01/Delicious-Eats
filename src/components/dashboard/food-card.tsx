@@ -36,7 +36,7 @@ export function FoodCard({ id, image, title, price, discount, type, category }: 
       <div className="p-3">
         <h3 className="text-sm font-medium mb-1">{title}</h3>
         <div className="flex justify-between items-center mb-2">
-          <span className="text-green-600 font-bold">${price.toFixed(2)}</span>
+          <span className="text-green-600 font-bold">Rs {price.toFixed(2)}</span>
           <div className="flex items-center gap-1">
             <span className={`w-2 h-2 rounded-full ${type === "Veg" ? "bg-green-500" : "bg-red-500"}`}></span>
             <span className="text-xs text-gray-500">{type}</span>

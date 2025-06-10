@@ -55,7 +55,7 @@ export function FloatingCart() {
                 <div className="flex-grow">
                   <h4 className="text-sm font-medium">{item.title}</h4>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-sm text-orange-600">${item.price.toFixed(2)}</span>
+                    <span className="text-sm text-orange-600">Rs {item.price.toFixed(2)}</span>
                     <div className="flex items-center gap-2">
                       <Button
                         variant="ghost"
@@ -93,7 +93,7 @@ export function FloatingCart() {
             <div className="mt-4 space-y-3">
               <div className="flex justify-between items-center font-semibold">
                 <span>Total:</span>
-                <span>${totalAmount.toFixed(2)}</span>
+                <span>Rs {totalAmount.toFixed(2)}</span>
               </div>
               <Button 
                 className="w-full"

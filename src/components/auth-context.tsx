@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types/supabase'
 import { supabase } from '@/lib/supabase'
+import { requestNotificationPermission } from '@/lib/firebase-messaging'
 
 type AuthContextType = {
   user: User | null
@@ -74,6 +75,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data) {
         console.log('Profile data found:', data)
         setProfile(data)
+        
+        // Request notification permission and update FCM token
+        try {
+          console.log('Requesting notification permission...')
+          const fcmToken = await requestNotificationPermission()
+          console.log('FCM token received:', fcmToken)
+          
+          if (fcmToken && fcmToken !== data.fcm_token) {
+            console.log('Updating FCM token in profile...')
+            await updateFCMToken(userId, fcmToken)
+            // Update local profile state with new token
+            setProfile({ ...data, fcm_token: fcmToken })
+          }
+        } catch (error) {
+          console.error('Error handling notifications:', error)
+        }
       } else {
         console.warn('No profile found for user:', userId)
         setProfile(null)
@@ -83,25 +100,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const updateFCMToken = async (userId: string, token: string) => {
+    try {
+      console.log('Updating FCM token for user:', userId)
+      const { error } = await supabase
+        .from('profiles')
+        .update({ fcm_token: token })
+        .eq('id', userId)
+
+      if (error) {
+        console.error('Error updating FCM token:', error)
+        throw error
+      }
+
+      console.log('FCM token updated successfully')
+    } catch (error) {
+      console.error('Error in updateFCMToken:', error)
+      throw error
+    }
+  }
+
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    if (error) throw error
+    try {
+      const { error, data } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+      if (error) throw error
+      if (data.user) {
+        console.log('User signed in successfully:', data.user.id)
+        await fetchProfile(data.user.id)
+      }
+    } catch (error) {
+      console.error('Error in signIn:', error)
+      throw error
+    }
   }
 
   const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
+    try {
+      const { error, data } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
         },
-      },
-    })
-    if (error) throw error
+      })
+      if (error) throw error
+      if (data.user) {
+        console.log('User signed up successfully:', data.user.id)
+        await fetchProfile(data.user.id)
+      }
+    } catch (error) {
+      console.error('Error in signUp:', error)
+      throw error
+    }
   }
 
   const signOut = async () => {

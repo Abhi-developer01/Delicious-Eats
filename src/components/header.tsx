@@ -20,9 +20,18 @@ export default function Header() {
   return (
     <header className="bg-background border-b">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-primary">
-          Delicious Eats
-        </Link>
+      <Link href="/" className="inline-flex items-center space-x-3">
+  <img
+    src="/images/delicious eat.png"
+    alt="Delicious Eats logo"
+    className="h-8 w-auto transform scale-150 object-contain"
+  />
+  <span className="text-2xl text-primary" style={{ fontFamily: "'Pacifico', cursive" }}>
+    Delicious Eats
+  </span>
+</Link>
+
+
         <nav>
           <ul className="flex space-x-4">
             <li>

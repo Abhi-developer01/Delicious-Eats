@@ -1,6 +1,7 @@
 import { Search, Share2 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
+import { NotificationBell } from "./notification-bell"
 
 export function Header() {
   return (
@@ -10,9 +11,10 @@ export function Header() {
         <Input type="text" placeholder="Search Product here..." className="pl-10 w-full" />
       </div>
       <div className="flex items-center gap-2">
-        <span className="font-semibold">Table 4</span>
+        <span className="font-semibold"></span>
         <span className="text-gray-500 text-sm">Floyd Miles</span>
       </div>
+      <NotificationBell />
       <Button variant="ghost" size="icon">
         <Share2 className="h-5 w-5" />
       </Button>
