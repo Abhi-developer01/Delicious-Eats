@@ -68,15 +68,15 @@ export default function HowItWorks() {
               key={index} 
               className="relative group bg-white p-6 sm:p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100"
             >
-              <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl mb-6 ${feature.color}`}>
-                <feature.icon className="w-6 h-6" />
+              <div className={`inline-flex items-center justify-center w-8 h-8 rounded-xl mb-6 ${feature.color} sm:w-12 sm:h-12`}>
+                <feature.icon className="w-4 h-4 sm:w-6 sm:h-6" />
               </div>
               
-              <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
+              <h3 className="text-sm sm:text-xl font-semibold mb-3 group-hover:text-primary transition-colors">
                 {feature.title}
               </h3>
               
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-gray-600 text-xs sm:text-base leading-relaxed">
                 {feature.description}
               </p>
 
