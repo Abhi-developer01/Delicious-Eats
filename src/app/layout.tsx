@@ -2,8 +2,7 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { Inter } from "next/font/google"
 import { CartProvider } from "@/components/dashboard/cart-context"
-import { AuthProvider } from '@/components/auth-context'
-import WebViewDetector from '@/components/webview-detector'
+import { AuthProvider } from "@/components/auth-context"
 import { CategoryProvider } from "@/components/dashboard/category-context"
 import LayoutWrapper from "@/components/layout-wrapper"
 
@@ -57,17 +56,15 @@ export default function RootLayout({
 
       </head>
       <body className={inter.className}>
-        <WebViewDetector>
-          <AuthProvider>
-            <CartProvider>
-              <CategoryProvider>
-                <LayoutWrapper>
-                  {children}
-                </LayoutWrapper>
-              </CategoryProvider>
-            </CartProvider>
-          </AuthProvider>
-        </WebViewDetector>
+        <AuthProvider>
+          <CartProvider>
+            <CategoryProvider>
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
+            </CategoryProvider>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   )

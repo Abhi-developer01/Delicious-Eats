@@ -1,57 +1,59 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Copy, ExternalLink } from 'lucide-react'
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Copy, Check } from 'lucide-react';
 
-export default function OpenInBrowserPrompt() {
-  const [currentUrl, setCurrentUrl] = useState('')
-  const [copied, setCopied] = useState(false)
+interface OpenInBrowserPromptProps {
+  onClose: () => void;
+}
+
+export default function OpenInBrowserPrompt({ onClose }: OpenInBrowserPromptProps) {
+  const [copied, setCopied] = useState(false);
+  const [currentUrl, setCurrentUrl] = useState('');
 
   useEffect(() => {
-    setCurrentUrl(window.location.href)
-  }, [])
+    if (typeof window !== 'undefined') {
+      setCurrentUrl(window.location.href);
+    }
+  }, []);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(currentUrl)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    navigator.clipboard.writeText(currentUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
+    });
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full text-center">
-        <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 mb-4">
-          <ExternalLink className="h-6 w-6 text-blue-600" />
-        </div>
-        <h3 className="text-lg font-semibold text-gray-900">Switch Browser to Continue</h3>
-        <p className="text-sm text-gray-600 mt-2">
-          To sign in securely and use all features, please open this page in your phone's main browser (like Chrome or Safari).
+        <h2 className="text-xl font-bold mb-3">Switch to a Secure Browser</h2>
+        <p className="text-gray-600 mb-6">
+          To sign in with Google, please open this page in your phone's main browser (like Chrome or Safari).
         </p>
-        <div className="mt-4 bg-gray-100 p-2 rounded-md text-sm text-gray-700 break-words">
-          {currentUrl}
-        </div>
-        <div className="mt-4 flex flex-col gap-2">
-          <Button onClick={handleCopy} className="w-full">
-            <Copy className="mr-2 h-4 w-4" />
-            {copied ? 'Copied!' : 'Copy Link'}
-          </Button>
-          <a
-            href={currentUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
+        
+        <div className="relative mb-4">
+          <input
+            type="text"
+            value={currentUrl}
+            readOnly
+            className="w-full bg-gray-100 border rounded-md p-2 pr-10 text-sm"
+          />
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={handleCopy}
+            className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
           >
-            <Button variant="outline" className="w-full">
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Try to Open in Browser
-            </Button>
-          </a>
+            {copied ? <Check className="h-5 w-5 text-green-600" /> : <Copy className="h-5 w-5" />}
+          </Button>
         </div>
-        <p className="text-xs text-gray-400 mt-4">
-          In-app browsers can sometimes block secure sign-ins.
-        </p>
+
+        <Button onClick={onClose} variant="outline" className="w-full">
+          Close
+        </Button>
       </div>
     </div>
-  )
+  );
 }

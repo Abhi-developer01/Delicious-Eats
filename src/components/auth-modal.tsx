@@ -14,6 +14,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle as signInWithGoogleService } from '@/lib/auth-service'
+import { isGoogleAuthBlocked } from '@/lib/browser-detector'
+import OpenInBrowserPrompt from './open-in-browser-prompt'
 
 type AuthMode = 'signin' | 'signup' | 'forgot-password'
 
@@ -33,9 +35,15 @@ export function AuthModal({
   const [successMessage, setSuccessMessage] = useState('')
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
   const [submittedEmail, setSubmittedEmail] = useState('')
+  const [showBrowserPrompt, setShowBrowserPrompt] = useState(false)
   const { signIn, signUp } = useAuth()
 
   const handleGoogleSignIn = async () => {
+    if (isGoogleAuthBlocked()) {
+      setShowBrowserPrompt(true)
+      return
+    }
+
     setError('')
     setLoading(true)
     try {
@@ -96,6 +104,8 @@ export function AuthModal({
 
   return (
     <>
+      {showBrowserPrompt && <OpenInBrowserPrompt onClose={() => setShowBrowserPrompt(false)} />}
+
       {/* Main Auth Modal */}
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[425px]">

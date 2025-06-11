@@ -1,29 +1,28 @@
-'use client'
-
-export const isWebView = (): boolean => {
+export const isWebView = () => {
   if (typeof window === 'undefined') {
-    return false
+    return false;
   }
 
-  const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera
+  const userAgent = window.navigator.userAgent.toLowerCase();
+  
+  // Common webview user agent patterns
+  const webViewPatterns = [
+    'linkedin',
+    'fbav',
+    'fban',
+    'instagram',
+    'twitter',
+    'pinterest',
+    'snapchat',
+    'wv', // Android System WebView
+    'ip(hone|ad|od);.*applewebkit(?!.*safari)' // iOS UIWebView
+  ];
 
-  // Common webview identifiers
-  const webViewRules = [
-    /wv\)/, // Android WebView
-    /linkedin/i, // LinkedIn
-    /fban/i, // Facebook
-    /fbav/i,
-    /instagram/i,
-    /twitter/i,
-    /pinterest/i,
-    /gsa/i, // Google Search App
-  ]
+  return webViewPatterns.some(pattern => userAgent.includes(pattern));
+};
 
-  // Check for iOS webview
-  const isIOS = /ip(ad|hone|od)/.test(userAgent)
-  if (isIOS && !/safari/.test(userAgent)) {
-    return true
-  }
-
-  return webViewRules.some(rule => rule.test(userAgent))
-}
+export const isGoogleAuthBlocked = () => {
+  // Google specifically blocks auth from certain webviews.
+  // We can be more specific here if needed, but a general webview check is a good start.
+  return isWebView();
+};
