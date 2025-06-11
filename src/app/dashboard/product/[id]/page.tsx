@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 import { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
@@ -12,15 +12,13 @@ import { useAuth } from "@/components/auth-context"
 import { AuthModal } from "@/components/auth-modal"
 import { FloatingCart } from "@/components/dashboard/floating-cart"
 
-
-
 interface ProductDetailsProps {
   params: Promise<{
     id: string
   }>
 }
+
 export default function ProductDetails({ params }: ProductDetailsProps) {
-  console.log(params,"iohohohohoih")
   const router = useRouter()
   const { toast } = useToast()
   const { filteredItems } = useCategory()
@@ -32,21 +30,18 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   const { user } = useAuth()
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
   const resolvedParams = use(params)
-  
 
   useEffect(() => {
-    // Find the item with the matching id
     const foundItem = filteredItems.find(item => item.id === Number(resolvedParams.id))
     setItem(foundItem)
 
-    // Find related items from the same category
     if (foundItem) {
       const related = filteredItems
         .filter(i => i.category === foundItem.category && i.id !== foundItem.id)
         .slice(0, 4)
       setRelatedItems(related)
     }
-    
+
     setLoading(false)
   }, [resolvedParams.id, filteredItems])
 
@@ -55,11 +50,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   }
 
   const handleQuantityChange = (type: 'increase' | 'decrease') => {
-    if (type === 'increase') {
-      setQuantity(prev => prev + 1)
-    } else {
-      setQuantity(prev => Math.max(1, prev - 1))
-    }
+    setQuantity(prev => type === 'increase' ? prev + 1 : Math.max(1, prev - 1))
   }
 
   const handleAddToCart = () => {
@@ -67,11 +58,11 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       id: item.id,
       title: item.title,
       price: item.price,
-      quantity: quantity,
+      quantity,
       image: item.image,
       type: item.type
     })
-    
+
     toast({
       title: "Added to Cart",
       description: `${quantity} x ${item.title} added to your cart`,
@@ -83,7 +74,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
       id: item.id,
       title: item.title,
       price: item.price,
-      quantity: quantity,
+      quantity,
       image: item.image,
       type: item.type
     })
@@ -98,7 +89,6 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
   if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>
   if (!item) return <div className="flex justify-center items-center h-screen">Item not found</div>
 
-  // Sample ingredients list
   const ingredients = [
     "2 cups all-purpose flour",
     "1 cup milk",
@@ -111,41 +101,24 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
   return (
     <>
-      <div className="p-6 max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={handleBack}
-          >
+      <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-4 sm:mb-6 flex-wrap gap-4">
+          <Button variant="ghost" onClick={handleBack}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Menu
           </Button>
 
-          <div className="flex items-center gap-6">
-            <div className="flex items-center gap-4">
-              <span className="text-sm font-medium">Quantity:</span>
-              <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleQuantityChange('decrease')}
-                >
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="text-lg font-medium w-8 text-center">{quantity}</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleQuantityChange('increase')}
-                >
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-2">
+              <Button variant="ghost" size="icon" onClick={() => handleQuantityChange('decrease')}>
+                <Minus className="h-4 w-4" />
+              </Button>
+              <span className="text-lg font-medium w-8 text-center">{quantity}</span>
+              <Button variant="ghost" size="icon" onClick={() => handleQuantityChange('increase')}>
+                <Plus className="h-4 w-4" />
+              </Button>
             </div>
-            <Button 
-              onClick={handleAddToCart}
-              className="flex items-center gap-2"
-            >
+            <Button onClick={handleAddToCart} className="flex items-center gap-2">
               <ShoppingCart className="h-4 w-4" />
               Add to Cart
             </Button>
@@ -154,8 +127,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
 
         <Card className="mb-12 overflow-hidden">
           <div className="grid md:grid-cols-2">
-            {/* Product Image */}
-            <div className="relative h-[400px]">
+            <div className="relative h-64 sm:h-80 md:h-[400px]">
               <img
                 src={item.image}
                 alt={item.title}
@@ -168,8 +140,7 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
               )}
             </div>
 
-            {/* Product Details */}
-            <div className="p-8 h-[400px] flex flex-col">
+            <div className="p-4 sm:p-8 flex flex-col">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h1 className="text-xl font-bold mb-2">{item.title}</h1>
@@ -184,9 +155,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                 </div>
               </div>
 
-              <div className="text-3xl font-bold text-orange-600 mb-6">Rs {item.price.toFixed(2)}</div>
+              <div className="text-xl sm:text-3xl font-bold text-orange-600 mb-4 sm:mb-6">Rs {item.price.toFixed(2)}</div>
 
-              {/* Ingredients */}
               <div className="flex-grow">
                 <h3 className="font-semibold mb-3">Key Ingredients</h3>
                 <ul className="grid grid-cols-2 gap-x-4 gap-y-2">
@@ -196,21 +166,17 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
                 </ul>
               </div>
 
-              <Button 
-                className="w-full mt-6"
-                onClick={handlePlaceOrder}
-              >
+              <Button className="w-full mt-4 sm:mt-6" onClick={handlePlaceOrder}>
                 Place Order
               </Button>
             </div>
           </div>
         </Card>
 
-        {/* Related Items */}
         {relatedItems.length > 0 && (
           <div className="mt-12">
             <h2 className="text-2xl font-bold mb-6">Related Items</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedItems.map((relatedItem) => (
                 <Card
                   key={relatedItem.id}
@@ -238,8 +204,8 @@ export default function ProductDetails({ params }: ProductDetailsProps) {
           </div>
         )}
         <FloatingCart />
-      </div> {/* Closes main content div: className="p-6 max-w-7xl mx-auto" */}
+      </div>
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
-} 
+}
