@@ -24,15 +24,15 @@ export default function Menu() {
   const router = useRouter()
 
   return (
-    <section id="menu" className="py-16 bg-gray-50">
+    <section id="menu" className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12">Our Menu Categories</h2>
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Our Menu Categories</h2>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-6">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-6">
           {categories.map((category) => (
             <div
               key={category.id}
-              className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md bg-white w-full h-36 md:h-40 lg:h-48"
+              className="relative group cursor-pointer overflow-hidden rounded-xl shadow-md bg-white w-full h-28 md:h-32 lg:h-40"
               onClick={() => router.push(`/dashboard/product?category=${category.id}`)}
             >
               {/* Full-Sized Category Image */}
@@ -40,7 +40,7 @@ export default function Menu() {
                 src={category.image_url}
                 alt={category.name}
                 fill
-                className="object-cover transition-transform duration-300 group-hover:scale-110"
+                className="object-contain p-2 transition-transform duration-300 group-hover:scale-110"
               />
             </div>
           ))}

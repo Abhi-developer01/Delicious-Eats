@@ -7,14 +7,14 @@ export default function Footer() {
   return (
     <footer className="bg-gray-800 text-white py-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-8 text-center md:text-left">
           <div>
             <h3 className="text-xl font-semibold mb-4">Delicious Eats</h3>
-            <p>Bringing the best local food right to your doorstep.</p>
+            <p className="text-sm">Bringing the best local food right to your doorstep.</p>
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 text-sm">
               <li>
                 <Link href="#menu" className="hover:text-primary">
                   Menu
@@ -39,7 +39,7 @@ export default function Footer() {
           </div>
           <div>
             <h3 className="text-xl font-semibold mb-4">Connect With Us</h3>
-            <div className="flex space-x-4">
+            <div className="flex justify-center md:justify-start space-x-4">
               <a href="#" className="hover:text-primary">
                 <Facebook size={24} />
               </a>

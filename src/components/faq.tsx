@@ -17,13 +17,13 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section id="faq" className="py-20">
+    <section id="faq" className="py-12 sm:py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
-        <Accordion type="single" collapsible className="max-w-6xl mx-auto">
+        <h2 className="text-lg sm:text-3xl font-bold text-center mb-8 sm:mb-12">Frequently Asked Questions</h2>
+        <Accordion type="single" collapsible className="text-sm max-w-6xl mx-auto">
           {faqs.map((faq, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger>{faq.question}</AccordionTrigger>
+              <AccordionTrigger className="text-lg">{faq.question}</AccordionTrigger>
               <AccordionContent>{faq.answer}</AccordionContent>
             </AccordionItem>
           ))}

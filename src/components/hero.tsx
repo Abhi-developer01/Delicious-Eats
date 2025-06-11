@@ -58,13 +58,13 @@ export default function Hero() {
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center text-white">
-          <h1 className="text-5xl font-bold mb-6 animate-fade-in">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-6 animate-fade-in">
             Delicious Food Delivered To Your Door
           </h1>
-          <p className="text-xl mb-8 animate-fade-in-delay">
+          <p className="text-lg sm:text-xl mb-8 animate-fade-in-delay">
             Order from your favorite restaurants with just a few clicks
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
+          <div className="flex  sm:flex-row gap-4 justify-center animate-fade-in-delay-2">
             {/* <Button 
               onClick={handleOrderClick} 
               size="lg" 
@@ -89,7 +89,7 @@ export default function Hero() {
             </Button>
             
           </div>
-          <p className="relative top-10 text-sm text-gray-100 animate-fade-in-delay-3">
+          <p className="mt-8 text-sm text-gray-100 animate-fade-in-delay-3">
             Are you a restaurant owner? Get access to our powerful dashboard
           </p>
         </div>

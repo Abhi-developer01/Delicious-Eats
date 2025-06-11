@@ -36,20 +36,20 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section id="testimonials" className="py-20 bg-gray-50">
+    <section id="testimonials" className="py-12 sm:py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">
+        <h2 className="text-2xl sm:text-4xl font-bold text-center mb-12 text-gray-800">
           What Our Customers Say
         </h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <div 
               key={index} 
               className="bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center text-center transform transition-all hover:scale-105 hover:shadow-xl"
             >
               {/* User Image */}
-              <div className="w-24 h-24 mb-4  rounded-full overflow-hidden border-2 border-gray-300">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 mb-4 rounded-full overflow-hidden border-2 border-gray-300">
                 <Image 
                   src={testimonial.image} 
                   alt={testimonial.name} 

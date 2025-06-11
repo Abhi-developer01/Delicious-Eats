@@ -108,9 +108,9 @@ export default function AISuggestionBox() {
   return (
     <section className="py-12 bg-gray-50">
       <div className="container mx-auto px-4">
-        <Card className="w-[80vw]max-w-2xl mx-auto">
+        <Card className="w-full max-w-2xl mx-auto">
           <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center">Feeling Creative?</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl font-bold text-center">Feeling Creative?</CardTitle>
             <CardDescription className="text-center">
               Tell us what you're in the mood for, and our AI chef will whip up a suggestion!
             </CardDescription>
@@ -125,7 +125,7 @@ export default function AISuggestionBox() {
                 className="w-full"
                 disabled={loading}
               />
-              <Button type="submit" className="w-80 mx-auto block flex items-center justify-center gap-2" disabled={loading}>
+              <Button type="submit" className="w-full sm:w-80 mx-auto block flex items-center justify-center gap-2" disabled={loading}>
   {loading ? (
     <>
       <Sparkles className="animate-spin h-4 w-4" />
@@ -148,7 +148,7 @@ export default function AISuggestionBox() {
       <div className="flex items-start gap-2">
         <ChefHat className="text-green-600 mt-1" size={20} />
         <div>
-          <h3 className="text-xl font-semibold">Dish Suggestion:</h3>
+          <h3 className="text-lg sm:text-xl font-semibold">Dish Suggestion:</h3>
           <p>{suggestion.dishName}</p>
         </div>
       </div>
