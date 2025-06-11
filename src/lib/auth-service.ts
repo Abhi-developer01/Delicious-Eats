@@ -47,13 +47,15 @@ export async function getProfile() {
 }
 
 export async function signInWithGoogle() {
-  const { error } = await supabase.auth.signInWithOAuth({
+  const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: window.location.origin,
     },
-  });
-  if (error) throw error;
+  })
+
+  if (error) throw error
+  return data
 }
 
 export async function updateProfile(profile: Partial<Profile>) {

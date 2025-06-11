@@ -2,7 +2,8 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { Inter } from "next/font/google"
 import { CartProvider } from "@/components/dashboard/cart-context"
-import { AuthProvider } from "@/components/auth-context"
+import { AuthProvider } from '@/components/auth-context';
+import InAppBrowserBlocker from '@/components/in-app-browser-blocker';
 import { CategoryProvider } from "@/components/dashboard/category-context"
 import LayoutWrapper from "@/components/layout-wrapper"
 
@@ -56,6 +57,7 @@ export default function RootLayout({
 
       </head>
       <body className={inter.className}>
+        <InAppBrowserBlocker />
         <AuthProvider>
           <CartProvider>
             <CategoryProvider>

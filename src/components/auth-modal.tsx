@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAuth } from './auth-context'
 import { FcGoogle } from 'react-icons/fc'
 import {
@@ -14,8 +14,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
 import { signInWithGoogle as signInWithGoogleService } from '@/lib/auth-service'
-import { isGoogleAuthBlocked } from '@/lib/browser-detector'
-
 
 type AuthMode = 'signin' | 'signup' | 'forgot-password'
 
@@ -35,23 +33,16 @@ export function AuthModal({
   const [successMessage, setSuccessMessage] = useState('')
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
   const [submittedEmail, setSubmittedEmail] = useState('')
-  const [isWebView, setIsWebView] = useState(false)
   const { signIn, signUp } = useAuth()
 
-  useEffect(() => {
-    // When the modal opens, check if we are in a restricted webview.
-    if (isOpen) {
-      setIsWebView(isGoogleAuthBlocked());
-    }
-  }, [isOpen]);
-
   const handleGoogleSignIn = async () => {
-
     setError('')
     setLoading(true)
     try {
-            await signInWithGoogleService();
+      await signInWithGoogleService()
       // Supabase handles redirection, so we might not need to explicitly call onClose()
+      // If the modal should close immediately, uncomment the line below.
+      // onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Google sign-in failed')
     } finally {
@@ -105,8 +96,6 @@ export function AuthModal({
 
   return (
     <>
-
-
       {/* Main Auth Modal */}
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[425px]">
@@ -167,29 +156,16 @@ export function AuthModal({
                     </span>
                   </div>
                 </div>
-                {isWebView ? (
-              <Button asChild variant="outline" className="w-full flex items-center justify-center gap-2">
-                {/* 
-                  This is a standard link, not a Next.js Link, to ensure a full page reload.
-                  This reload is necessary to hit our server-side endpoint, which will then
-                  perform the formal redirect to Google's auth page.
-                */}
-                <a href="/api/auth/google-redirect">
-                  <FcGoogle className="h-5 w-5" />
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={handleGoogleSignIn}
+                  disabled={loading}
+                >
+                  {/* You can add a Google Icon here */}
+                  <FcGoogle className="h-4 w-4 mr-2" />
                   Sign in with Google
-                </a>
-              </Button>
-            ) : (
-              <Button
-                variant="outline"
-                className="w-full flex items-center justify-center gap-2"
-                onClick={handleGoogleSignIn}
-                disabled={loading}
-              >
-                <FcGoogle className="h-5 w-5" />
-                Sign in with Google
-              </Button>
-            )}
+                </Button>
               </>
             )}
 
