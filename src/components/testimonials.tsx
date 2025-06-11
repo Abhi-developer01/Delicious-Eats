@@ -44,7 +44,7 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-  const scrollRef = useRef(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -53,10 +53,10 @@ export default function Testimonials() {
     const scroll = () => {
       if (container) {
         scrollAmount += 1;
-        if (scrollAmount >= container / 2) {
+        if (scrollAmount >= container.scrollWidth / 2) {
           scrollAmount = 0;
         }
-        container/scrollAmount ;scrollAmount;
+        container.scrollLeft = scrollAmount;
       }
     };
 
