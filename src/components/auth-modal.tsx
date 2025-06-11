@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
-import { signInWithGoogle as signInWithGoogleService, getGoogleSignInUrl } from '@/lib/auth-service'
+import { signInWithGoogle as signInWithGoogleService } from '@/lib/auth-service'
 import { isGoogleAuthBlocked } from '@/lib/browser-detector'
 
 
@@ -35,27 +35,13 @@ export function AuthModal({
   const [successMessage, setSuccessMessage] = useState('')
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
   const [submittedEmail, setSubmittedEmail] = useState('')
-  const [googleSignInUrl, setGoogleSignInUrl] = useState<string | null>(null)
   const [isWebView, setIsWebView] = useState(false)
   const { signIn, signUp } = useAuth()
 
   useEffect(() => {
-    const checkWebView = async () => {
-      const blocked = isGoogleAuthBlocked();
-      setIsWebView(blocked);
-      if (blocked) {
-        try {
-          const url = await getGoogleSignInUrl();
-          setGoogleSignInUrl(url);
-        } catch (error) {
-          console.error('Failed to get Google sign in URL', error);
-          setError('Could not prepare Google Sign-In. Please try again later.');
-        }
-      }
-    };
-
+    // When the modal opens, check if we are in a restricted webview.
     if (isOpen) {
-      checkWebView();
+      setIsWebView(isGoogleAuthBlocked());
     }
   }, [isOpen]);
 
@@ -183,7 +169,12 @@ export function AuthModal({
                 </div>
                 {isWebView ? (
               <Button asChild variant="outline" className="w-full flex items-center justify-center gap-2">
-                <a href={googleSignInUrl || '#'}>
+                {/* 
+                  This is a standard link, not a Next.js Link, to ensure a full page reload.
+                  This reload is necessary to hit our server-side endpoint, which will then
+                  perform the formal redirect to Google's auth page.
+                */}
+                <a href="/api/auth/google-redirect">
                   <FcGoogle className="h-5 w-5" />
                   Sign in with Google
                 </a>
