@@ -47,15 +47,29 @@ export async function getProfile() {
 }
 
 export async function signInWithGoogle() {
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+  if (error) throw error;
+}
+
+export async function getGoogleSignInUrl() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: window.location.origin,
+      redirectTo: `${window.location.origin}/auth/callback`,
+      skipBrowserRedirect: true,
     },
-  })
+  });
 
-  if (error) throw error
-  return data
+  if (error) throw error;
+  if (!data.url) {
+    throw new Error("Could not get Google sign-in URL.");
+  }
+  return data.url;
 }
 
 export async function updateProfile(profile: Partial<Profile>) {

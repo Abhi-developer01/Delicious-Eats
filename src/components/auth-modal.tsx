@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from './auth-context'
 import { FcGoogle } from 'react-icons/fc'
 import {
@@ -13,8 +13,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { supabase } from '@/lib/supabase'
-import { signInWithGoogle as signInWithGoogleService } from '@/lib/auth-service'
+import { signInWithGoogle as signInWithGoogleService, getGoogleSignInUrl } from '@/lib/auth-service'
 import { isGoogleAuthBlocked } from '@/lib/browser-detector'
+
 
 type AuthMode = 'signin' | 'signup' | 'forgot-password'
 
@@ -34,20 +35,36 @@ export function AuthModal({
   const [successMessage, setSuccessMessage] = useState('')
   const [showVerificationDialog, setShowVerificationDialog] = useState(false)
   const [submittedEmail, setSubmittedEmail] = useState('')
+  const [googleSignInUrl, setGoogleSignInUrl] = useState<string | null>(null)
+  const [isWebView, setIsWebView] = useState(false)
   const { signIn, signUp } = useAuth()
 
-  const handleGoogleSignIn = async () => {
-    if (isGoogleAuthBlocked()) {
-      // This is a security measure by Google. We attempt to redirect the user 
-      // to their main browser, where authentication is allowed.
-      window.location.href = window.location.href;
-      return;
+  useEffect(() => {
+    const checkWebView = async () => {
+      const blocked = isGoogleAuthBlocked();
+      setIsWebView(blocked);
+      if (blocked) {
+        try {
+          const url = await getGoogleSignInUrl();
+          setGoogleSignInUrl(url);
+        } catch (error) {
+          console.error('Failed to get Google sign in URL', error);
+          setError('Could not prepare Google Sign-In. Please try again later.');
+        }
+      }
+    };
+
+    if (isOpen) {
+      checkWebView();
     }
+  }, [isOpen]);
+
+  const handleGoogleSignIn = async () => {
 
     setError('')
     setLoading(true)
     try {
-      await signInWithGoogleService()
+            await signInWithGoogleService();
       // Supabase handles redirection, so we might not need to explicitly call onClose()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Google sign-in failed')
@@ -164,16 +181,24 @@ export function AuthModal({
                     </span>
                   </div>
                 </div>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={handleGoogleSignIn}
-                  disabled={loading}
-                >
-                  {/* You can add a Google Icon here */}
-                  <FcGoogle className="h-4 w-4 mr-2" />
+                {isWebView ? (
+              <Button asChild variant="outline" className="w-full flex items-center justify-center gap-2">
+                <a href={googleSignInUrl || '#'}>
+                  <FcGoogle className="h-5 w-5" />
                   Sign in with Google
-                </Button>
+                </a>
+              </Button>
+            ) : (
+              <Button
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2"
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+              >
+                <FcGoogle className="h-5 w-5" />
+                Sign in with Google
+              </Button>
+            )}
               </>
             )}
 
