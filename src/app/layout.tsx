@@ -12,11 +12,15 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Delicious Eats - Food Ordering App",
   description: "Order from your favorite restaurants with just a few clicks. Delicious food delivered to your door.",
+  icons: {
+  icon: "/images/logo.png", // ✅ Correct
+},
   openGraph: {
     title: "Delicious Eats - Food Ordering App",
     description: "Order from your favorite restaurants with just a few clicks. Delicious food delivered to your door.",
     url: "https://delicious-eats-lime.vercel.app/",
     siteName: "Delicious Eats",
+    
     images: [
       {
         url: "https://delicious-eats-lime.vercel.app/og-image.svg", // Must be an absolute URL
