@@ -6,15 +6,28 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ShoppingCart, X, Plus, Minus } from 'lucide-react'
 import { useCart } from './cart-context'
+import { useAuth } from '../auth-context'
+import { AuthModal } from '../auth-modal'
 
 export function FloatingCart() {
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
   const { items, totalItems, totalAmount, updateQuantity, removeFromCart } = useCart()
+  const { user } = useAuth()
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
+
 
   const handleCheckout = () => {
-    setIsOpen(false)
-    router.push('/dashboard/checkout')
+
+    if (!user) {
+      setIsAuthModalOpen(true)
+    } else {
+      setIsOpen(false)
+
+      router.push('/dashboard/checkout')
+    }
+    // setIsOpen(false)
+    // router.push('/dashboard/checkout')
   }
 
   if (totalItems === 0) return null
@@ -105,6 +118,8 @@ export function FloatingCart() {
           )}
         </Card>
       )}
+            <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+
     </div>
   )
 } 

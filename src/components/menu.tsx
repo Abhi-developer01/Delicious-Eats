@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { Pizza, UtensilsCrossed } from "lucide-react";
 
 const categories = [
   { id: 1, name: 'Pizza', image_url: '/images/image1.png' },
@@ -26,7 +27,17 @@ export default function Menu() {
   return (
     <section id="menu" className="py-12 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Our Menu Categories</h2>
+      <div className="max-w-3xl mx-auto text-center mb-16">
+          {/* <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 shadow-lg">
+            <Pizza className="w-8 h-8 text-white" />
+          </div> */}
+          <h2 className="text-2xl sm:text-4xl font-bold mb-4 bg-clip-text text-black">
+             Menu 
+          </h2>
+          {/* <p className="text-base sm:text-lg text-gray-600">
+            Everything you need to manage your restaurant efficiently in one place
+          </p> */}
+        </div>
         
         <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-6">
           {categories.map((category) => (

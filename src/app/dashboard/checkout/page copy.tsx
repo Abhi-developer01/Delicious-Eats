@@ -10,7 +10,6 @@ import { useCart } from "@/components/dashboard/cart-context"
 import { useAuth } from "@/components/auth-context"
 import { Check, ArrowLeft } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
-import Script from "next/script";
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -147,165 +146,12 @@ export default function CheckoutPage() {
     }
   }, [items, router, showSuccess])
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault()
-  //   setLoading(true)
-
-  //   // Create order data for Supabase with proper types
-  //   const orderData = {
-  //     user_id: user?.id, // This will be a UUID
-  //     customer_details: {
-  //       fullName: address.fullName,
-  //       street: address.street,
-  //       city: address.city,
-  //       state: address.state,
-  //       zipCode: address.zipCode,
-  //       phone: address.phone
-  //     },
-  //     payment_method: paymentMethod,
-  //     payment_details: paymentMethod === 'card' ? {
-  //       cardNumber: cardDetails.cardNumber,
-  //       cardHolder: cardDetails.cardHolder,
-  //       expiryDate: cardDetails.expiryDate,
-  //       cvv: cardDetails.cvv
-  //     } : paymentMethod === 'upi' ? {
-  //       upiId: upiDetails.upiId
-  //     } : null,
-  //     items: items.map(item => ({
-  //       id: item.id,
-  //       title: item.title,
-  //       price: item.price,
-  //       quantity: item.quantity,
-  //       image: item.image
-  //     })),
-  //     subtotal: Number(totalAmount),
-  //     delivery_fee: 5,
-  //     total_amount: Number(totalAmount + 5),
-  //     status: 'pending',
-  //     created_at: new Date().toISOString()
-  //   }
-
-  //   try {
-  //     // Save order to Supabase
-  //     const { data: orderResult, error } = await supabase
-  //       .from('orders1')
-  //       .insert([orderData])
-  //       .select()
-
-  //     if (error) {
-  //       console.error('Supabase Error:', error)
-  //       // Show error to user
-  //       alert('Failed to place order. Please try again.')
-  //       setLoading(false)
-  //       return
-  //     }
-
-  //     if (!orderResult || orderResult.length === 0) {
-  //       console.error('No order result returned')
-  //       alert('Failed to place order. Please try again.')
-  //       setLoading(false)
-  //       return
-  //     }
-
-  //     console.log('Order successfully created:', orderResult)
-      
-  //     // After successfully creating the order, send email notification
-  //     try {
-  //       const orderNumber = orderResult[0].id;
-        
-  //       // Send email notification
-  //       const emailResponse = await fetch('/api/email-notifications', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json'
-  //         },
-  //         body: JSON.stringify({
-  //           title: 'Your Order Has Been Placed!',
-  //           message: `
-  //             <p>Thank you for your order from our Food Ordering App!</p>
-  //             <p>Your order #${orderNumber} has been received and is being processed.</p>
-  //             <p><strong>Order Summary:</strong></p>
-  //             <ul>
-  //               ${items.map(item => `<li>${item.quantity}x ${item.title} - $${(item.price * item.quantity).toFixed(2)}</li>`).join('')}
-  //             </ul>
-  //             <p><strong>Total:</strong> $${(totalAmount + 5).toFixed(2)}</p>
-  //             <p><strong>Delivery Address:</strong><br/>
-  //             ${address.fullName}<br/>
-  //             ${address.street}<br/>
-  //             ${address.city}, ${address.state} ${address.zipCode}<br/>
-  //             ${address.phone}</p>
-  //             <p>Thank you for choosing our service!</p>
-  //           `,
-  //           link: '/dashboard/orders',
-  //           testMode: false,
-  //           testEmail: user?.email
-  //         })
-  //       });
-        
-  //       const emailResult = await emailResponse.json();
-  //       console.log('Email notification result:', emailResult);
-  //     } catch (emailError) {
-  //       console.error('Error sending order confirmation email:', emailError);
-  //       // Continue with success flow even if email fails
-  //     }
-
-  //     // Show success after a delay
-  //     setTimeout(() => {
-  //       setLoading(false)
-  //       setShowSuccess(true)
-  //       clearCart()
-  //     }, 1500)
-  //   } catch (error) {
-  //     console.error('Error creating order:', error)
-  //     alert('Failed to place order. Please try again.')
-  //     setLoading(false)
-  //   }
-  // }
-
-  const createOrder = async (e:any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const res = await fetch("/api/createOrder", {
-      method: "POST",
-      body: JSON.stringify({ amount: Number(totalAmount + 5) * 100 }),
-    });
-    const data = await res.json();
+    setLoading(true)
 
-    const paymentData = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      order_id: data.id,
-
-      handler: async function (response: any) {
-        // verify payment
-        const res = await fetch("/api/verifyOrder", {
-          method: "POST",
-          body: JSON.stringify({
-            orderId: response.razorpay_order_id,
-            razorpayPaymentId: response.razorpay_payment_id,
-            razorpaySignature: response.razorpay_signature,
-          }),
-        });
-        const data = await res.json();
-        console.log(data);
-
-        
-        if (data.isOk) {
-
-          console.log("12334555");
-          
-
-          // do whatever page transition you want here as payment was successful
-          // debugger
-          // alert("Payment successful");
-          setTimeout(() => {
-        setLoading(false)
-        setShowSuccess(true)
-        clearCart()
-      }, 0)
-        } else {
-          alert("Payment failed");
-        }
-
-         const orderData = {
+    // Create order data for Supabase with proper types
+    const orderData = {
       user_id: user?.id, // This will be a UUID
       customer_details: {
         fullName: address.fullName,
@@ -337,7 +183,6 @@ export default function CheckoutPage() {
       status: 'pending',
       created_at: new Date().toISOString()
     }
-    // debugger
 
     try {
       // Save order to Supabase
@@ -404,24 +249,17 @@ export default function CheckoutPage() {
       }
 
       // Show success after a delay
-      // setTimeout(() => {
-      //   setLoading(false)
-      //   setShowSuccess(true)
-      //   clearCart()
-      // }, 1500)
+      setTimeout(() => {
+        setLoading(false)
+        setShowSuccess(true)
+        clearCart()
+      }, 1500)
     } catch (error) {
       console.error('Error creating order:', error)
       alert('Failed to place order. Please try again.')
       setLoading(false)
     }
-        
-        
-      },
-    };
-
-    const payment = new (window as any).Razorpay(paymentData);
-    payment.open();
-  };
+  }
 
   const renderPaymentDetails = () => {
     switch (paymentMethod) {
@@ -563,10 +401,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-       <Script
-        type="text/javascript"
-        src="https://checkout.razorpay.com/v1/checkout.js"
-      />
       <div className="flex items-center mb-8">
         <Button 
           variant="ghost" 
@@ -580,7 +414,7 @@ export default function CheckoutPage() {
       </div>
       
       <div className="grid md:grid-cols-2 gap-8">
-        <form onSubmit={createOrder} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <h2 className="text-lg font-semibold">Delivery Address</h2>
             
