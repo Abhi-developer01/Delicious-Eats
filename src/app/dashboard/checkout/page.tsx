@@ -345,6 +345,9 @@ export default function CheckoutPage() {
         .from('orders1')
         .insert([orderData])
         .select()
+        
+        console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+        
 
       if (error) {
         console.error('Supabase Error:', error)
